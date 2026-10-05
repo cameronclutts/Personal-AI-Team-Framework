@@ -35,7 +35,7 @@ Read this first, then `team/charter.md`. Do not read the whole repository up fro
   subagents it dispatches: {{subagent_role_list}}.
 - `.claude/skills/` — the team skills (`/coordinate`, `/role`, `/team-new`, `/run-what`,
   `/team-next`, `/team-work`, `/team-review`, `/open-pr`, `/close-work`, `/team-promote`,
-  `/team-retro`, `/process-run`).
+  `/team-retro`, `/process-run`, `/clear-stale-agents`).
 
 ## Branches
 
