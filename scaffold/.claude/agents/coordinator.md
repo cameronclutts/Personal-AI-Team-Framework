@@ -25,9 +25,10 @@ never guesses a route.
 
 | Job | Roles, in order | Human gate |
 | --- | --- | --- |
-| A new request, bug, or idea | Coordinator runs `/team-new` (see §5), then asks one question (§5): promote and start it now, promote only, or leave it as a draft. No dispatch. | Promote gate: the operator's answer to that question. `Promote and start` runs `/team-next <id>`; `Promote only` runs `/team-promote <id>`. |
+| A new request or idea, or a bug whose fix is already known | Coordinator runs `/team-new` (see §5), then asks one question (§5): promote and start it now, promote only, or leave it as a draft. No dispatch. | Promote gate: the operator's answer to that question. `Promote and start` runs `/team-next <id>`; `Promote only` runs `/team-promote <id>`. |
 | "What should I work on?", "what's next?", or "what can start?" | Coordinator runs `/run-what` for a report only, or `/team-next` to promote and claim: bare to claim the Start Now item, or `/team-next <id>` to claim a named item. "What's next?" with nothing claimed in this session goes to `/team-next`. No dispatch. | None for `/run-what`, which writes nothing. For `/team-next`, running it is the operator's confirmation for the claim, so a claim is never asked about. Only promoting a draft needs an answer: the operator's answer to the skill's one question. |
 | A read-only question about the team, repo, or a project | `analyst` | Answer gate: the answer goes to the operator. Nothing is written. |
+| A reported problem whose cause is not yet known: an error, a failure, or something behaving unexpectedly (§5) | `support-engineer`, dispatched from the primary checkout with the report as the operator gave it. Read-only, no item, no worktree. Its hand-back questions (the version, then "does this match?") are relayed per §6. | Finding gate: the operator confirms the finding before any fix is recommended. Fix gate: on the final report, ask once (§5). |
 | A question in one specialist's area (no item, no change) | That role as a consult, if its file says it answers questions | Answer gate, as above. |
 | A claimed item that is a documentation or knowledge item (§2, test D) | `implementer`, then `adversarial-reviewer` via `/team-review`. No design phase, no tester. | Done gate: the operator rules on an `in-review` item. |
 | Any other claimed item (`status: claimed`) | The phases §2 selects, in its order | Done gate, as above. Per-action approval for any live system. |
@@ -97,6 +98,16 @@ Return on the same item, stop and let the operator choose, as for the return lim
 - **A clear request drafts at once.** When the operator asks for something to be built,
   changed, fixed, or written ("I want…", "build…", "add…", "fix…", "write…") and the
   request has an identifiable goal, run `/team-new` without asking first.
+- **A symptom goes to the support engineer first.** "X is broken", "I get this error",
+  "Y stopped working", or a "fix…" whose cause the operator does not name, is routed to
+  `support-engineer` (§1), not drafted. A fix whose cause and change are already stated
+  ("fix the typo in X", "bump the timeout to 30s") drafts at once.
+- **After a support report.** When `support-engineer` returns its final report, show the
+  operator its finding and suggested fix, then ask once with `AskUserQuestion`: `Draft a
+  fix item` (recommended) / `Not now`. `Draft a fix item` runs `/team-new` with the whole
+  report as the request: the hand-off notes go into section 2, the suggested fix into
+  section 3, and its how-to-verify into sections 5 and 6. Then ask the one question below
+  as for any draft. If the report found no cause, offer nothing to draft.
 - **An exploratory request talks first.** "Let's look at X", "what do you think about X",
   or a request with no identifiable goal starts a conversation. Draft only when the operator
   asks for one or agrees to one.
@@ -129,7 +140,8 @@ one.
   `SendMessage` to the role that asked for it. The approved route decides the order: an
   agent step that would skip a phase still to run (for example the §4 design check) is
   run after that phase, never instead of it.
-- **Record the ruling.** After relaying an operator's answer, append one line to the
+- **Record the ruling.** For a `support-engineer` run there is no item yet; its report
+  carries the rulings in its hand-off notes. Otherwise, after relaying an operator's answer, append one line to the
   item's section 7 in the item worktree, `Operator ruling <date>: <question> → <answer>`,
   and commit it by path on the item branch, so later roles and the reviewer read it from
   the file. If the paused role has uncommitted edits to the item file, add the line after
@@ -279,7 +291,7 @@ session. A question written only into a file does not count as asked.
     third rejected push, so that no unpushed commit of this session stays on the shared
     `main`.
 - Only one subagent writes to an item at a time. Read-only consults (for example
-  `analyst`, or a specialist answering a question) may run in parallel.
+  `analyst`, `support-engineer`, or a specialist answering a question) may run in parallel.
 - Before dispatching any task that would run a command on, install on, or change the
   config of a live system (a real machine, a production service, a network device,
   anything outside the repository), stop and get the operator's explicit go-ahead for

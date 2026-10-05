@@ -33,7 +33,7 @@ Closed API-0001. WEB-0002 (the recipe page) is now unblocked. Start it?   [Start
 ## Before you start
 
 - **Claude Code** with subagents, skills, and `AskUserQuestion`. Roles pin `model: opus`
-  (design and review) and `model: sonnet` (build, test, analyst), so your plan needs both.
+  (design, review, and troubleshooting) and `model: sonnet` (build, test, analyst), so your plan needs both.
 - **git** 2.5 or later (worktrees) and **python3** (the `/process-run` report scripts).
 - Optional: **`gh`**, logged in, for the GitHub pull-request flow, and **Playwright** if the
   team has a UI tester.
@@ -106,8 +106,9 @@ pull requests are welcome.
 
 ### Step by step
 
-1. **Ask, and it's drafted.** A clear request ("I want X", "fix Y") becomes a draft at
-   once; "let's look at X" starts a conversation first. A draft has 3 to 8 acceptance
+1. **Ask, and it's drafted.** A clear request ("I want X", "fix the typo in Y") becomes a
+   draft at once; "let's look at X" starts a conversation first, and "X is broken" goes to
+   the support engineer (see [When something breaks](#when-something-breaks)). A draft has 3 to 8 acceptance
    criteria that anyone can check on their own, and a `depends_on:` list for items it waits
    on. Right after drafting, the coordinator asks one question: promote and start it,
    promote only, or leave it as a draft. You never have to type a command to get going.
@@ -150,6 +151,42 @@ pull requests are welcome.
    change as one diff. When you rule it done, in words, `/close-work` merges the pull
    request. Then, in one commit on `main`, it sets `done`, moves the file to
    `work/closed/`, and logs your ruling. It never infers `done` from a passing review.
+
+### When something breaks
+
+Not every request is a known change. When you report a symptom ("the import fails with
+this error", "the page stopped loading") and don't name the cause, the coordinator sends it
+to the `support-engineer` instead of drafting a guess at a fix.
+
+```
+ you: "X is broken"
+   │  coordinator dispatches support-engineer (read-only, no item yet)
+   ▼
+ pin the version ─▶ locate ─▶ isolate ─▶ confirm with you ─▶ report
+ (asks you which     (finds the   (narrows to the   ("does this match   (what's happening,
+  branch/env/machine) path)        lines or step)    what you see?")     where, fix, verify)
+                                                                              │
+                                     "Draft a fix item?" ── yes ──▶ /team-new ▶ normal flow
+```
+
+1. **Pin the version.** It asks which version, branch, environment, or machine the problem
+   is on, unless you said. It never guesses from whichever checkout is open.
+2. **Locate, isolate, confirm.** It finds where the behaviour diverges, quotes the evidence
+   with file and line, and asks you whether the finding matches what you see. It does not
+   recommend anything until you agree.
+3. **Repair before mechanism.** If a restart, rollback, or rebuild would get you working
+   again, it says so first and digs for the root cause only when that is worth it. It keeps
+   a confirmed finding and a confirmed root cause as separate claims.
+4. **Report.** What's happening, where, a suggested fix (including the cases the obvious fix
+   gets wrong), how to verify it, and hand-off notes: as reported, as evidenced, what it
+   ruled out, and what is still unverified.
+5. **You decide.** The coordinator asks once whether to draft a fix item. If you say yes,
+   the report becomes the draft, and it goes through the normal promote, build, test, and
+   review flow.
+
+The support engineer writes nothing and never applies a fix. Reading from a live system (a
+real server, a network device) needs your go-ahead for that specific command, like any other
+role.
 
 ### With or without GitHub
 
@@ -198,13 +235,14 @@ pull requests are welcome.
 
 ### Roles
 
-Every team starts with four:
+Every team starts with five:
 
 | Role | Job |
 | --- | --- |
 | `coordinator` | Your session. Talks, drafts, claims, routes, dispatches, relays questions. Never builds. |
 | `implementer` | Builds one claimed item in its worktree, following its designs. |
 | `adversarial-reviewer` | Checks designs before build, and tries to fail the finished work. Never fixes it. |
+| `support-engineer` | Read-only. Troubleshoots a reported problem to a proven cause and recommends the fix. |
 | `analyst` | Read-only. Answers questions with evidence. |
 
 The [`roles/`](roles/) library has more you can add at `/team-init` or later with
@@ -221,10 +259,10 @@ section becomes its row in the coordinator's phase table.
 | `ui-tester` | test | A screen, page, or dashboard view is added or changed. |
 
 A role is one Markdown file: stance, phase and trigger, may read, may write, never, hand
-back instead of acting, and skills used. Each one pins a model (`opus` for design and review
-work, `sonnet` for building, testing, and the analyst) and a tool allowlist. No specialist
-gets the `Agent` tool, and the analyst gets no file-writing tool. You can write your own in
-the same shape.
+back instead of acting, and skills used. Each one pins a model (`opus` for design, review,
+and troubleshooting, `sonnet` for building, testing, and the analyst) and a tool allowlist.
+No specialist gets the `Agent` tool, and neither the analyst nor the support engineer gets a
+file-writing tool. You can write your own in the same shape.
 
 ## Gates
 

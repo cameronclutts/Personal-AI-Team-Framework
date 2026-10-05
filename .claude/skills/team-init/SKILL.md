@@ -74,7 +74,8 @@ whole team before anything is created.
 ### Part 3: What kind of work it does
 
 Explain: "Your team always has a coordinator, an implementer who does the work, a
-reviewer who tries to find what's wrong with it, and an analyst who answers questions.
+reviewer who tries to find what's wrong with it, a support engineer who troubleshoots
+problems you report, and an analyst who answers questions.
 I'll work out which specialists to add from what you've told me, and ask only about what I
 can't tell."
 
@@ -139,6 +140,7 @@ Here's your team, <name>:
     coordinator           your session; plans, routes, and asks you
     implementer           does the work
     adversarial-reviewer  checks designs before building and tries to fail the result
+    support-engineer      troubleshoots reported problems to a proven cause, read-only
     analyst               answers questions, read-only
     <each added role>     <one plain line>   (added because: <the answer that added it>, or "from your purpose")
 
