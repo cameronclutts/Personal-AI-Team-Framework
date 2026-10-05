@@ -232,6 +232,7 @@ role.
 | `/close-work` | Carries out your `done` ruling: merge, then close in one commit. Asks for the ruling if you haven't given it. |
 | `/team-retro` | Reads the signals and writes proposed rule changes for you to accept or reject. |
 | `/process-run` | Takes a throwaway item from draft to done in a sandbox clone, through every gate agent for real, and reports time, tokens, and instruction-file growth against the last run. Removes the sandbox afterwards. |
+| `/clear-stale-agents` | Closes idle agent characters in a local pixel-agents office through its server, never a Claude process. `/process-run` runs it at the end. Reports and closes nothing when pixel-agents is not running. |
 
 ### Roles
 

@@ -112,7 +112,24 @@ branch in its worktree, saying so in Method), following the shared-clone rules i
 `standards/writing.md`. Reply with the findings file's path, the run's total time and tokens
 against the previous row, and the count of compaction candidates found, nothing longer.
 
-## 12. Remove the sandbox
+## 12. Clear stale agents
+
+After the reply, run `/clear-stale-agents` with a cutoff of 10 minutes, the shortest it
+accepts, to close the idle pixel-agents characters this run's agents left. Run this one Bash
+call, replacing the quoted path with the primary checkout's absolute path:
+
+```
+node "<the primary checkout's absolute path>/.claude/skills/clear-stale-agents/clear-stale-agents.mjs" 10; echo "clear-stale-agents exit $?"
+```
+
+Report the result in one line, then go on to step 13 whatever it printed. Exit 0: give the
+closed and after counts. Exit 2: pixel-agents is not reachable, so nothing was closed; say
+so. Any other exit: quote the error line. This step asks the operator nothing and never
+stops the run. Agents that finished less than 10 minutes ago stay; they close when their
+session ends or on a later `/clear-stale-agents`. The cutoff also closes any other session's
+character idle past 10 minutes; the session itself is untouched.
+
+## 13. Remove the sandbox
 
 After the reply, remove only what this run created: `CLONE`, the clone directory step 1 built, and
 `TIMING`, the timing file step 4 kept. Never touch the real repository, and never run

@@ -28,3 +28,8 @@ Several coordinator sessions can run at once, each with its own claim.
 
 After changing how the team works, `/process-run` takes a throwaway item from draft to
 done in a sandbox clone and reports where the time and tokens went, against the last run.
+
+`/clear-stale-agents` closes idle agent characters in a local pixel-agents office, if you
+run one; `/process-run` calls it at the end. Every skill: `/coordinate`, `/role`,
+`/team-new`, `/run-what`, `/team-next`, `/team-promote`, `/team-work`, `/team-review`,
+`/open-pr`, `/close-work`, `/team-retro`, `/process-run`, `/clear-stale-agents`.

@@ -290,9 +290,10 @@ They only run when an item needs them."
 8. **Check.** No `{{` may remain anywhere in the target except inside
    `context/_template.md` and `work/templates/work-item.md`. If any other file still has
    one, fix it before continuing. Every skill directory in `scaffold/.claude/skills/` must
-   also be in the target's `.claude/skills/`, including `run-what` and `process-run`, and
-   both files in `scaffold/scripts/` must be in the target's
-   `scripts/`; copy any that is missing.
+   also be in the target's `.claude/skills/`: `close-work`, `coordinate`, `open-pr`,
+   `process-run`, `role`, `run-what`, `team-new`, `team-next`, `team-promote`,
+   `team-retro`, `team-review`, `team-work`, and `clear-stale-agents`. Both files in
+   `scaffold/scripts/` must be in the target's `scripts/`; copy any that is missing.
 9. **Git.** In the target, run `git init -b main` and make one initial commit of the whole
    tree. Then, per answer 2:
    - **Existing repo:** `git remote add origin <url>`, then `git push -u origin main`.
