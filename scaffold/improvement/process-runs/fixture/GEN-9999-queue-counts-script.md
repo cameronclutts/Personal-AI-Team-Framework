@@ -4,6 +4,7 @@ title: Queue-counts script that prints work-queue totals as JSON
 status: draft
 priority: 3
 touches: [improvement]
+target_repo: this-repo
 depends_on: []
 source: Process-run fixture. Not a real item. Copied unchanged into a sandbox clone by /process-run.
 created: {{creation_date}}
@@ -36,6 +37,12 @@ Create, inside the repository the item sits in:
 The script is a local command. It starts no service, opens no port, installs nothing, and
 touches nothing outside the repository. It has no screen, page or dashboard view; the only
 output is JSON.
+
+### Files written
+
+- tools/queue-counts/queue_counts.py
+- tools/queue-counts/test_queue_counts.py
+- tools/queue-counts/README.md
 
 ## 4. Non-goals
 

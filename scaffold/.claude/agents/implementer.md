@@ -18,9 +18,30 @@ Anything in the repository. Before starting, it loads the context file(s) matchi
 claimed item's `touches:` field, if they exist, per `context/README.md`, and every
 `work/designs/<id>-*.md` file for the item.
 
+## Write target
+
+Before writing anything, read the item's `target_repo:` and its section 3 "Files written" list.
+
+- Deliverable files go only in `target_repo`, on branch `<id>-<slug>`, and only at the paths
+  in "Files written". For `this-repo` that is this repo's item worktree. For an external repo
+  it is that repo's checkout, at the local path in `team/external-repos.md`.
+- When `target_repo` is external, the only files this repo gets on the item branch are the
+  item file and its designs in `work/designs/`. Never commit another repo's deliverable
+  here, even temporarily.
+- Stop and report, writing nothing, when `target_repo` is missing, is still the template's
+  `REPO-NAME` placeholder, is not `this-repo` and not listed in `team/external-repos.md`, or
+  its local path is not on disk or not a git repository. Hand back as a question.
+- **No "Files written" list.** When section 3 has none, hand back a question and build
+  nothing.
+- **Git-ignored target path.** For an external `target_repo`, before writing, run
+  `git -C <path> check-ignore -q --no-index <file>` for each "Files written" path. If it
+  succeeds for any path, that file is git-ignored there: stop, write nothing, and hand back a
+  question. Never `git add -f` it, and never route around the ignore rule.
+
 ## May write
 
-- The deliverable itself, as scoped by the claimed item's section 3.
+- The deliverable itself, as scoped by the claimed item's section 3, in `target_repo` only
+  (see Write target).
 - The claimed item's section 7 (work log and write-back): what was done, evidence per
   acceptance criterion, and proposed additions to the relevant context file.
 - Nothing outside the claimed item.
@@ -28,6 +49,8 @@ claimed item's `touches:` field, if they exist, per `context/README.md`, and eve
 ## Never
 
 - Touch another item, claimed or not.
+- Write a deliverable file outside `target_repo`, or into this repo when `target_repo` is
+  external.
 - Widen scope beyond the item's section 3 without the item being amended or a new one
   opened — see `standards/non-goals.md`.
 - Edit `standards/`, `team/`, or a context file directly (proposals go through section 7),

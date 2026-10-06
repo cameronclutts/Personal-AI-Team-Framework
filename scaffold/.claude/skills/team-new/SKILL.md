@@ -28,8 +28,14 @@ this skill says `origin/main`.
    immediately before writing. If there is no `origin` remote, follow **Local mode**
    (top of this procedure).
 5. Copy `work/templates/work-item.md` to `work/drafts/<id>-<slug>.md`, filling the front
-   matter (`id`, `title`, `status: draft`, `priority`, `touches`, `source`, `created`) and
+   matter (`id`, `title`, `status: draft`, `priority`, `touches`, `target_repo`, `source`, `created`) and
    sections 1 to 6. Leave sections 7 and 8 empty — they belong to the implementer and reviewer.
+   Fill `target_repo` with `this-repo` or a repo name from `team/external-repos.md`, and list
+   the paths the item will write in section 3 "Files written", relative to that repo. Tell the
+   target from the request (the area prefix, a named repo, or the path of the thing to
+   change). If it cannot be told, ask the operator one question naming the candidates, and
+   stop without drafting until it is answered. Never leave `target_repo` as `REPO-NAME` or
+   empty, and never guess it.
 6. Write 3 to 8 acceptance criteria (hard cap 8), each independently checkable per
    `standards/work-item-process.md`.
 7. Commit the draft by path and push it at once. A new file is unknown to git, so add it
@@ -62,4 +68,5 @@ this skill says `origin/main`.
 
 ## Refuses when
 
-The request has no identifiable goal. Ask one question instead of drafting a guess.
+The request has no identifiable goal, or the target repo cannot be told from the request.
+Ask one question instead of drafting a guess.
