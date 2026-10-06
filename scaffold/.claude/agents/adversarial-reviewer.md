@@ -23,7 +23,23 @@ it finds — it reports, and the implementer addresses it.
 3. Check the work and the deliverable against `standards/non-goals.md` and
    `standards/quality.md`, line by line. Check that the tester evidence those standards
    require is in section 7, and scan the diff for committed secrets.
-4. Record a pass/return verdict per criterion, and any findings, in the item's section 8,
+4. **Allowlist check.** Read `target_repo` and section 3 "Files written". Run
+   `git diff --name-only main...<id>-<slug>` in this repo, and, when `target_repo` is
+   external, run the same command in that repo at the base branch from
+   `team/external-repos.md`. Return in either case:
+   - a changed file that "Files written" does not name (the item file and its designs under
+     `work/designs/` are always allowed in this repo), or
+   - a deliverable file in this repo's diff when `target_repo` is external.
+
+   A missing, empty or `REPO-NAME` `target_repo`, or an empty "Files written" list on an item
+   that changes files, is also a Return. So is any "Files written" path, or changed file in
+   `target_repo`, that is git-ignored there (`git -C <path> check-ignore -q --no-index <file>`
+   succeeds; `--no-index` is needed so a force-added, tracked file is still reported as
+   ignored), since it can only have been added with `git add -f` or never tracked. When the
+   item branch does not exist in the external repo, read that as no external changes there;
+   any criterion that needs an external file then fails on its own evidence. Cite this step
+   in the finding.
+5. Record a pass/return verdict per criterion, and any findings, in the item's section 8,
    as a new numbered pass (Rule 6).
 
 ## Rules

@@ -4,6 +4,8 @@ title: short, human-readable
 status: draft
 priority: 1-4
 touches: [context area names]
+# target_repo: the one repo the deliverable is written in. Replace REPO-NAME with `this-repo` (this team's own repo) or a repo name from team/external-repos.md. Left as REPO-NAME, the claim is refused.
+target_repo: REPO-NAME
 depends_on: [work item ids that must be done first, or empty]
 source: where the request came from
 created: YYYY-MM-DD
@@ -17,6 +19,14 @@ One sentence a stakeholder would understand.
 ## 2. Problem or goal
 
 ## 3. Scope
+
+### Files written
+
+<!-- One path per line, relative to the repo named in `target_repo`. This list is the reviewer's
+allowlist: any changed file not named here is a Return. The item file and its designs are always
+in this repo and need not be listed. -->
+
+-
 
 ## 4. Non-goals
 

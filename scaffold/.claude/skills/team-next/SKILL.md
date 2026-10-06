@@ -104,7 +104,8 @@ this skill says `origin/main`.
       answer names a subset of drafts that leaves that `<top id>` out, or `/team-promote`
       drops it, claim nothing, say `Not claimed: <top id> was not promoted`, and print the
       report again (step 5). With an id (3.3b or 3.3d), it is the named
-      id, provided every dependency is still met. Move its file from `work/backlog/` to `work/in-progress/` and set `status: claimed`.
+      id, provided every dependency is still met. Before moving anything, run the
+      **Target repo check** below on the item; if it refuses, claim nothing. Move its file from `work/backlog/` to `work/in-progress/` and set `status: claimed`.
       A draft promoted in 4.1 follows the same two moves: `/team-promote` takes it from
       `work/drafts/` to `work/backlog/` as `ready`, then the claim takes it to
       `work/in-progress/` as `claimed`. Its promotion-diffs entry records the promotion
@@ -121,6 +122,24 @@ this skill says `origin/main`.
       write** (§7): its first log check ran before 4.1, so check the log again now, then
       append the entries, commit, run the rule 5 check
       and the **Pre-push check**, and push, in one command.
+
+   **Target repo check.** Read the item's `target_repo:` as the whole text after the colon on
+   its own line, with surrounding spaces trimmed. Nothing is stripped from it, so a trailing
+   `# comment` makes the value unlisted. The template's `REPO-NAME` placeholder is unlisted
+   too. Refuse the claim, naming the reason, in these cases. Read `team/external-repos.md`
+   from the primary checkout as the list of record, and resolve a listed path relative to the
+   primary checkout's root. Rows marked as an example in that file are not listed.
+   - `target_repo` is missing or empty: `Not claimed: <id> has no target_repo`.
+   - `target_repo` is not `this-repo` and is not a Repo row in `team/external-repos.md` (or
+     that file is missing): `Not claimed: <id> target_repo "<value>" is not listed in team/external-repos.md`.
+   - `target_repo` is a listed row whose local path is not a git repository (it does not
+     exist, or `git -C <path> rev-parse --show-toplevel` fails or prints a different directory
+     than <path>, as when the path is a plain folder inside some other repository):
+     `Not claimed: <id> target_repo "<value>" at <path> is not a git repository`.
+
+   `this-repo` passes without a path check. Refusing changes no file: after a refusal in 4.2,
+   the draft stays promoted if 4.1 already promoted it, and the report is printed again
+   (step 5).
 
    **The claim is the lock, and it lives on `main`.** Do 4.1 to 4.3 in the primary
    checkout, which is always on `main`, in this order. If there is no `origin` remote,
@@ -204,7 +223,8 @@ never asks a second question.
 - Commit a claim anywhere but `main`, leave it unpushed, or commit without `--only`.
 - Reset `main` past a commit that does not carry this session's marker.
 - Push with `--force`, `--force-with-lease`, or `--no-verify`.
-- Claim an item whose dependencies are not all met, a draft that has not been promoted,
+- Claim an item whose `target_repo` fails the Target repo check, or whose dependencies are
+  not all met, a draft that has not been promoted,
   or, with no id, any item but the Start Now item (or, after promotion, the top startable
   item).
 - Ask more than one question, or stop without printing the report again.

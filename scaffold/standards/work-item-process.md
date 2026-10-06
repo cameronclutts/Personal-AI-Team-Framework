@@ -56,6 +56,22 @@ stale; it is never auto-released — the operator decides what happens to it.
 Several coordinator sessions may run at once, each holding its own claim. Another session's
 claim never blocks this one.
 
+## Target repo
+
+Every work item names the one repo its deliverable belongs in, in the `target_repo:` front-matter
+field: `this-repo` (this team's own repo), or a repo name listed in `team/external-repos.md`.
+The template starts the field as the placeholder `REPO-NAME`. Section 3 lists the files the
+item writes under "Files written", each path relative to that repo.
+
+- `/team-next` refuses to claim an item whose `target_repo` is empty, is still `REPO-NAME`, is
+  not `this-repo` and not a listed repo, or whose local path is not a git repository.
+- Deliverable files are written only in `target_repo`. When it is external, the only files this
+  repo gets on the item branch are the item file and its designs.
+- The reviewer runs `git diff --name-only main...<id>-<slug>` in this repo, and in `target_repo`
+  when it is external. A changed file that "Files written" does not name is a Return, and so is a
+  deliverable file in this repo's diff when `target_repo` is external. So is a git-ignored path
+  there (`git check-ignore -q --no-index`).
+
 ## Branches and merges
 
 - **The claim is the lock, and it lives on `main`.** `/team-next` commits the claim on
